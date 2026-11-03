@@ -1,0 +1,21 @@
+# Feature Completion Checklist
+- [x] Auth: register/login/logout/remember, password reset, change password, email verification scaffolding, profile, account deletion
+- [x] Dashboard: date/greeting, task progress, Salah + next prayer countdown info, health overview, quick actions, upcoming, empty states
+- [x] Tasks: CRUD, categories/priorities/statuses, complete/reopen/postpone/duplicate, recurring (daily/weekly/weekdays/monthly/custom) generating dated instances, search/filter, completion timestamps
+- [x] Salah: 5 prayers, 4 statuses + unmarked, calculated times (Karachi/MWL/ISNA/Egypt/Makkah/Custom), Hanafi Asr factor 2, adjustments, history, weekly/monthly counts, settings persisted
+- [x] Health: weight history+chart data, water with target in settings, walking, exercise (multiple/day)
+- [x] Meals: types, items, home/outside, optional nutrition
+- [x] Sleep: start/end session, manual entry, cross-midnight & 06:00-14:00 daytime sleep, overlap guard for open sessions, quality
+- [x] Office: attendance, overnight shifts, late detection vs settings, leave, salary records
+- [x] Freelancing: projects, statuses/platforms, income gross/fees/net, PKR/USD manual rate
+- [x] Learning: goals/courses, sessions, progress
+- [x] Habits: custom habits, daily toggle per date, history preserved on deactivate/delete (soft delete)
+- [x] Finance: income/expense, categories, monthly data via reports, recurring flags
+- [x] Calendar: day summary + month task overview, all record types
+- [x] Reports: daily/weekly(+prev comparison)/monthly/yearly/custom + Chart.js (prayer doughnut, finance bar, weight line) from real DB records only
+- [x] Notifications: reminder scheduler command, duplicate prevention, subscriptions storage, in-app fallback, quiet/notification settings fields
+- [x] Settings: profile, location/time, salah, health targets, work, theme/accent - all DB persisted
+- [x] Export: per-table CSV, full JSON export, print-to-PDF via reports pages
+- [x] PWA: manifest, service worker (cache-first static, network-first pages, offline fallback), icons (SVG), theme #101411, standalone
+- [x] Tests: Auth, Task, Prayer, Health, Finance, Ownership feature tests + Prayer unit test (require `composer install` + `php artisan test` to execute)
+- [ ] Verified on a live PHP/MySQL install - must be run after `composer install` (PHP was not available in the build environment; see Known Limitations)

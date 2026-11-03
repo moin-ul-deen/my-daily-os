@@ -1,0 +1,3 @@
+@extends('layouts.app')@section('content')<h3>Prayer History</h3>
+<div class="card intro-card"><p class="mb-1"><strong>Every prayer you have marked, day by day.</strong></p><p class="mb-0 text-muted-x">This history never changes when you update today's record. To fix a day, open the Salah page and pick that date.</p></div>
+@forelse($records as $r)<div class="card d-flex flex-row justify-content-between"><span>{{ $r->prayer_date->format('d M Y') }} - {{ $r->prayer_name }}</span><span>{{ $r->status }} · Scheduled {{ $r->scheduled_time }}</span></div>@empty<div class="empty">No prayer records yet. Open the Salah page and mark your first prayer after you pray.</div>@endforelse {{ $records->links() }} @endsection

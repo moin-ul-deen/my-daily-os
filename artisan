@@ -1,0 +1,8 @@
+#!/usr/bin/env php
+<?php
+// Laravel artisan entry point - generated with the project. Run: php artisan serve / migrate / schedule:run
+define('LARAVEL_START', microtime(true));
+require __DIR__.'/vendor/autoload.php';
+$app = require_once __DIR__.'/bootstrap/app.php';
+$status = $app->handleCommand(new Symfony\Component\Console\Input\ArgvInput);
+exit($status);

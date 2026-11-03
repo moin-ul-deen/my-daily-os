@@ -1,0 +1,11 @@
+<?php
+namespace App\Http\Controllers;
+use App\Models\Project; use Illuminate\Http\Request;
+class ProjectController extends Controller {
+ public function index(){ $items=Project::where('user_id',auth()->id())->orderByDesc('created_at')->paginate(30); return view('freelancing.projects.index',compact('items')); }
+ public function create(){ return view('freelancing.projects.create'); }
+ public function store(Request $r){ $v=$r->validate(['name'=>'required|string|max:255','client_name'=>'nullable|string','platform'=>'nullable|string','description'=>'nullable|string','start_date'=>'nullable|date','deadline'=>'nullable|date','status'=>'required|string','priority'=>'nullable|string','estimated_value'=>'nullable|numeric','actual_revenue'=>'nullable|numeric','currency'=>'nullable|string','notes'=>'nullable|string']);  Project::create(array_merge($v,['user_id'=>auth()->id()])); return redirect()->route('freelancing.projects.index')->with('success','Saved'); }
+ public function edit(Project $project){ abort_unless($project->user_id===auth()->id(),403); $item=$project; return view('freelancing.projects.edit',compact('item')); }
+ public function update(Request $r,Project $project){ abort_unless($project->user_id===auth()->id(),403); $v=$r->validate(['name'=>'required|string|max:255','client_name'=>'nullable|string','platform'=>'nullable|string','description'=>'nullable|string','start_date'=>'nullable|date','deadline'=>'nullable|date','status'=>'required|string','priority'=>'nullable|string','estimated_value'=>'nullable|numeric','actual_revenue'=>'nullable|numeric','currency'=>'nullable|string','notes'=>'nullable|string']);  $project->update($v); return redirect()->route('freelancing.projects.index')->with('success','Updated'); }
+ public function destroy($project){ $project=Project::withTrashed()->find($project); if(!$project) return redirect()->route('freelancing.projects.index')->with('success','Already deleted'); abort_unless($project->user_id===auth()->id(),403); if($project->trashed()) return redirect()->route('freelancing.projects.index')->with('success','Already deleted'); \Illuminate\Support\Facades\DB::transaction(function() use ($project){ $project->delete(); }); return redirect()->route('freelancing.projects.index')->with('success','Project deleted'); }
+}

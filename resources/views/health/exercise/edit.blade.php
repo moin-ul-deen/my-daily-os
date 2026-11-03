@@ -1,0 +1,11 @@
+@extends('layouts.app')
+@section('content')<h3>Edit Exercise</h3>
+<div class="card intro-card"><p class="mb-1"><strong>Fix this exercise entry.</strong></p><p class="mb-0 text-muted-x">Change what you need, then tap Update.</p></div>
+<div class="card"><form method="POST" action="{{ route('health.exercise.update',$item) }}">@csrf @method('PUT')<div class="mb-3"><label class="form-label" for="exercise_type">Exercise type</label><input type="text" id="exercise_type" name="exercise_type" value="{{ $item->exercise_type }}" class="form-control" placeholder="e.g. Push-ups"><div class="form-text">Examples: Walking, Running, Cycling, Gym, Push-ups, Squats, Stretching — or your own.</div></div>
+<div class="mb-3"><label class="form-label" for="date">Date</label><input type="date" id="date" name="date" value="{{ $item->date }}" class="form-control"></div>
+<div class="mb-3"><label class="form-label" for="duration_minutes">Duration (minutes)</label><input type="number" id="duration_minutes" name="duration_minutes" value="{{ $item->duration_minutes }}" class="form-control" placeholder="e.g. 20"></div>
+<div class="mb-3"><label class="form-label" for="sets">Sets</label><input type="number" id="sets" name="sets" value="{{ $item->sets }}" class="form-control" placeholder="e.g. 3"><div class="form-text">Optional — for exercises like push-ups or squats.</div></div>
+<div class="mb-3"><label class="form-label" for="repetitions">Repetitions</label><input type="number" id="repetitions" name="repetitions" value="{{ $item->repetitions }}" class="form-control" placeholder="e.g. 12 (per set)"></div>
+<div class="mb-3"><label class="form-label" for="weight_kg">Weight / resistance (kg)</label><input type="number" step="0.1" id="weight_kg" name="weight_kg" value="{{ $item->weight_kg }}" class="form-control" placeholder="e.g. 20 — leave empty if none"><div class="form-text">Optional — only if you used weights or resistance.</div></div>
+<div class="mb-3"><label class="form-label" for="notes">Notes</label><input type="text" id="notes" name="notes" value="{{ $item->notes }}" class="form-control" placeholder="Optional note…"></div>
+<button class="btn btn-accent">Update</button></form></div>@endsection

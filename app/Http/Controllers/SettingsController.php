@@ -1,0 +1,6 @@
+<?php
+namespace App\Http\Controllers; use Illuminate\Http\Request;
+class SettingsController extends Controller {
+ public function index(Request $r){ return view('settings.index',['user'=>$r->user(),'settings'=>$r->user()->settings]); }
+ public function update(Request $r){ $v=$r->validate(['currency'=>'nullable|string','weight_unit'=>'nullable|string','distance_unit'=>'nullable|string','time_format'=>'nullable|string','date_format'=>'nullable|string','theme'=>'nullable|in:dark,light,system','accent_color'=>['nullable','string','regex:/^#(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/'],'target_weight'=>'nullable|numeric','water_target_ml'=>'nullable|integer','walking_target_km'=>'nullable|numeric','weekly_exercise_sessions'=>'nullable|integer','office_start'=>'nullable','office_end'=>'nullable','working_days'=>'nullable|array','monthly_salary'=>'nullable|numeric','notifications_enabled'=>'nullable|boolean','quiet_start'=>'nullable','quiet_end'=>'nullable']); $settings=$r->user()->settings ?? $r->user()->settings()->create([]); $settings->update($v); $r->user()->update($r->validate(['city'=>'nullable|string','country'=>'nullable|string','timezone'=>'nullable|string'])); return back()->with('success','Settings saved'); }
+}

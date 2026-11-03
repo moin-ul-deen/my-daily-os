@@ -1,0 +1,5 @@
+@extends('layouts.guest')
+@section('content')
+<p class="text-muted-x">Set a new password for your account.</p>
+<form method="POST" action="{{ route('password.store') }}">@csrf<input type="hidden" name="token" value="{{ $request->route('token') }}"><div class="mb-3"><label class="form-label" for="email">Email</label><input type="email" id="email" name="email" class="form-control" placeholder="you@example.com" value="{{ old('email',$request->email) }}" required></div><div class="mb-3"><label class="form-label" for="password">New password</label><input type="password" id="password" name="password" class="form-control" placeholder="New password" required><div class="form-text">Use at least 8 characters.</div></div><div class="mb-3"><label class="form-label" for="password_confirmation">Confirm new password</label><input type="password" id="password_confirmation" name="password_confirmation" class="form-control" placeholder="Repeat the new password" required></div><button class="btn btn-accent w-100">Reset password</button></form>
+@endsection

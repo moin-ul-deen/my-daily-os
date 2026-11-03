@@ -1,0 +1,5 @@
+<?php namespace Tests\Feature; use App\Models\{User,Task,WeightLog}; use Illuminate\Foundation\Testing\RefreshDatabase; use Tests\TestCase;
+class OwnershipTest extends TestCase { use RefreshDatabase;
+ public function test_user_cannot_edit_other_users_task(): void { $a=User::factory()->create(); $b=User::factory()->create(); $t=Task::create(['user_id'=>$a->id,'title'=>'Secret','category'=>'Personal','date'=>now()->toDateString(),'priority'=>'Low']); $this->actingAs($b)->get("/tasks/{$t->id}/edit")->assertForbidden(); $this->actingAs($b)->put("/tasks/{$t->id}",['title'=>'Hacked','category'=>'Personal','date'=>now()->toDateString(),'priority'=>'Low','status'=>'Pending'])->assertForbidden(); $this->assertEquals('Secret',Task::find($t->id)->title); }
+ public function test_lists_are_scoped(): void { $a=User::factory()->create(); $b=User::factory()->create(); WeightLog::create(['user_id'=>$a->id,'date'=>now()->toDateString(),'weight_kg'=>99]); $this->actingAs($b)->get('/health/weight')->assertDontSee('99'); }
+}

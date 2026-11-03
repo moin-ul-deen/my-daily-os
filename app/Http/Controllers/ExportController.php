@@ -1,0 +1,8 @@
+<?php
+namespace App\Http\Controllers; use Illuminate\Http\Request; use Symfony\Component\HttpFoundation\StreamedResponse;
+class ExportController extends Controller {
+ private array $map=['tasks'=>\App\Models\Task::class,'prayer_records'=>\App\Models\PrayerRecord::class,'water_logs'=>\App\Models\WaterLog::class,'weight_logs'=>\App\Models\WeightLog::class,'walking_logs'=>\App\Models\WalkingLog::class,'exercise_logs'=>\App\Models\ExerciseLog::class,'meals'=>\App\Models\Meal::class,'sleep_records'=>\App\Models\SleepRecord::class,'financial_records'=>\App\Models\FinancialRecord::class,'habits'=>\App\Models\Habit::class,'learning_sessions'=>\App\Models\LearningSession::class,'projects'=>\App\Models\Project::class];
+ public function index(){ return view('settings.export',['tables'=>array_keys($this->map)]); }
+ public function csv(Request $r,string $table){ abort_unless(isset($this->map[$table]),404); $model=$this->map[$table]; $rows=$model::where('user_id',auth()->id())->get(); return response()->streamDownload(function()use($rows){ $o=fopen('php://output','w'); if($rows->isNotEmpty()){ fputcsv($o,array_keys($rows->first()->toArray())); foreach($rows as $row) fputcsv($o,array_map(fn($v)=>is_array($v)?json_encode($v):$v,$row->toArray())); } fclose($o); }, $table.'.csv',['Content-Type'=>'text/csv']); }
+ public function full(Request $r){ $data=[]; foreach($this->map as $k=>$m){ $data[$k]=$m::where('user_id',auth()->id())->get(); } $data['profile']=$r->user()->only(['name','email','city','country','timezone','created_at']); $data['settings']=$r->user()->settings; $data['prayer_settings']=$r->user()->prayerSetting; return response()->json($data)->withHeaders(['Content-Disposition'=>'attachment; filename=my-daily-os-export.json']); }
+}

@@ -1,0 +1,13 @@
+<?php
+namespace App\Http\Controllers; use App\Models\{OfficeRecord,SalaryRecord}; use Carbon\Carbon; use Illuminate\Http\Request;
+class OfficeController extends Controller {
+ public function index(){ $items=OfficeRecord::where('user_id',auth()->id())->orderByDesc('date')->paginate(30); $salaries=SalaryRecord::where('user_id',auth()->id())->orderByDesc('month')->paginate(10); return view('office.index',compact('items','salaries')); }
+ public function create(){ return view('office.create'); }
+ public function store(Request $r){ $v=$r->validate(['date'=>'required|date','work_start'=>'nullable|date','work_end'=>'nullable|date','break_minutes'=>'nullable|integer','is_leave'=>'nullable|boolean','leave_type'=>'nullable|string','notes'=>'nullable|string']);
+  $total=null; $late=false; if(!empty($v['work_start'])&&!empty($v['work_end'])){ $total=round((Carbon::parse($v['work_start'])->diffInMinutes(Carbon::parse($v['work_end']))-($v['break_minutes']??0))/60,2); $expected=Carbon::parse($v['date'].' '.(auth()->user()->settings->office_start??'17:00')); $late=Carbon::parse($v['work_start'])->gt($expected->addMinutes(5)); }
+  OfficeRecord::updateOrCreate(['user_id'=>auth()->id(),'date'=>$v['date']],array_merge($v,['total_hours'=>$total,'is_late'=>$late])); return redirect()->route('office.index')->with('success','Saved'); }
+ public function edit(OfficeRecord $office){ abort_unless($office->user_id===auth()->id(),403); $item=$office; return view('office.edit',compact('item')); }
+ public function update(Request $r,OfficeRecord $office){ abort_unless($office->user_id===auth()->id(),403); $v=$r->validate(['date'=>'required|date','work_start'=>'nullable|date','work_end'=>'nullable|date','break_minutes'=>'nullable|integer','is_leave'=>'nullable|boolean','leave_type'=>'nullable|string','notes'=>'nullable|string']); $office->update($v); return redirect()->route('office.index'); }
+ public function destroy($office){ $office=OfficeRecord::find($office); if(!$office) return redirect()->route('office.index')->with('success','Already deleted'); abort_unless($office->user_id===auth()->id(),403); $office->delete(); return redirect()->route('office.index')->with('success','Office record deleted'); }
+ public function storeSalary(Request $r){ $v=$r->validate(['month'=>'required|date','amount'=>'required|numeric','currency'=>'nullable|string','overtime_amount'=>'nullable|numeric','notes'=>'nullable|string']); SalaryRecord::create(array_merge($v,['user_id'=>auth()->id()])); return back()->with('success','Salary saved'); }
+}

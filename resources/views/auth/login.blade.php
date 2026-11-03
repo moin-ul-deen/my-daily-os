@@ -1,0 +1,5 @@
+@extends('layouts.guest')
+@section('content')
+<p class="text-muted-x">Welcome back. Log in to continue to your dashboard — your tasks, Salah, health and progress for today.</p>
+<form method="POST" action="{{ route('login') }}">@csrf<div class="mb-3"><label class="form-label" for="email">Email</label><input type="email" id="email" name="email" class="form-control" placeholder="you@example.com" value="{{ old('email') }}" required autofocus></div><div class="mb-3"><label class="form-label" for="password">Password</label><input type="password" id="password" name="password" class="form-control" placeholder="Your password" required></div><label class="mb-3"><input type="checkbox" name="remember"> Remember me</label><div class="form-text mb-3">Tick “Remember me” only on your own phone or computer.</div><button class="btn btn-accent w-100">Log in</button><div class="mt-3 text-center"><a href="{{ route('password.request') }}">Forgot password?</a> · <a href="{{ route('register') }}">Register</a></div></form>
+@endsection

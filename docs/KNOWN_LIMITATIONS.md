@@ -1,0 +1,11 @@
+# Known Limitations & Dependencies
+1. **Tests**: an earlier build-environment note said tests were not executed; that is outdated. On 2026-11-03 the suite was executed with PHP 8.3: `composer install` OK, all migrations run clean, and the full PHPUnit suite passes (see `docs/VERIFICATION.md` for the current counts). Tests run on SQLite in-memory only; production uses MySQL.
+2. **Web Push is implemented**: real encrypted push delivery via `minishlink/web-push` (installed through Composer). Subscriptions are stored per user/device, VAPID keys come from `.env` (generate them with `php artisan notifications:vapid`), expired subscriptions are removed automatically, and delivery failures are logged — push code never breaks a request. Full explanation and testing steps: `docs/NOTIFICATIONS.md`. In-app inbox notifications work with zero push setup.
+3. **iOS PWA**: Push on iPhone requires iOS 16.4+, installation to Home Screen, and permission granted inside the installed app; Apple does not guarantee background delivery timing. In-app reminders are the fallback. The app fully works if permission is denied.
+4. **PWA PNG icons**: `icon.svg` is the real icon. The 192/512 PNG files are placeholders - render them from the SVG before production for best install prompts on Android.
+5. **PDF export**: Implemented as browser Print → Save as PDF on report pages (no paid/heavy PDF dependency). CSV and full JSON exports are native downloads.
+6. **Offline writes**: Service worker caches static assets and falls back to `/offline.html`. Offline data entry queue is NOT implemented - the server DB is the source of truth and entries require a connection, avoiding stale-overwrite conflicts (per spec's caution).
+7. **Email verification / mail**: Works when MAIL_* is configured; default mailer is `log` so registration is never blocked in local dev.
+8. **Recurring tasks**: Generated 30 occurrences ahead at creation. Extend by editing/re-saving the template or adding a scheduled generator if longer horizons are needed.
+9. **Currency conversion**: Never automatic/hardcoded - enter `exchange_rate` manually on freelance income.
+10. **Breeze**: Auth is a manual Breeze-style implementation (same routes, controllers, views) so no extra package install is required beyond Laravel itself.

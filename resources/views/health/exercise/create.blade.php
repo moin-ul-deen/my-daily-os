@@ -1,0 +1,11 @@
+@extends('layouts.app')
+@section('content')<h3>Add Exercise</h3>
+<div class="card intro-card"><p class="mb-1"><strong>Log one exercise session.</strong></p><p class="mb-0 text-muted-x">Write what you did and the date. Duration, sets and repetitions are optional — fill what fits this exercise.</p></div>
+<div class="card"><form method="POST" action="{{ route('health.exercise.store') }}">@csrf<div class="mb-3"><label class="form-label" for="exercise_type">Exercise type</label><input type="text" id="exercise_type" name="exercise_type" class="form-control" placeholder="e.g. Push-ups" value="{{ old('exercise_type') }}" required><div class="form-text">Examples: Walking, Running, Cycling, Gym, Push-ups, Squats, Stretching — or your own.</div></div>
+<div class="mb-3"><label class="form-label" for="date">Date</label><input type="date" id="date" name="date" class="form-control" value="{{ old('date', now()->toDateString()) }}" required><div class="form-text">Today is already selected.</div></div>
+<div class="mb-3"><label class="form-label" for="duration_minutes">Duration (minutes)</label><input type="number" id="duration_minutes" name="duration_minutes" class="form-control" placeholder="e.g. 20" value="{{ old('duration_minutes') }}"></div>
+<div class="mb-3"><label class="form-label" for="sets">Sets</label><input type="number" id="sets" name="sets" class="form-control" placeholder="e.g. 3" value="{{ old('sets') }}"><div class="form-text">Optional — for exercises like push-ups or squats.</div></div>
+<div class="mb-3"><label class="form-label" for="repetitions">Repetitions</label><input type="number" id="repetitions" name="repetitions" class="form-control" placeholder="e.g. 12 (per set)" value="{{ old('repetitions') }}"></div>
+<div class="mb-3"><label class="form-label" for="weight_kg">Weight / resistance (kg)</label><input type="number" step="0.1" id="weight_kg" name="weight_kg" class="form-control" placeholder="e.g. 20 — leave empty if none" value="{{ old('weight_kg') }}"><div class="form-text">Optional — only if you used weights or resistance.</div></div>
+<div class="mb-3"><label class="form-label" for="notes">Notes</label><input type="text" id="notes" name="notes" class="form-control" placeholder="Optional note…" value="{{ old('notes') }}"></div>
+<button class="btn btn-accent">Save</button></form></div>@endsection

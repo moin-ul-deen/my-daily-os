@@ -1,0 +1,5 @@
+<?php namespace Tests\Feature; use App\Models\{User,Task}; use Illuminate\Foundation\Testing\RefreshDatabase; use Tests\TestCase;
+class TaskTest extends TestCase { use RefreshDatabase;
+ public function test_create_complete_reopen_task(): void { $u=User::factory()->create(); $this->actingAs($u)->post('/tasks',['title'=>'Walk','category'=>'Health','date'=>now()->toDateString(),'priority'=>'Medium'])->assertRedirect(); $t=Task::first(); $this->actingAs($u)->post("/tasks/{$t->id}/complete")->assertRedirect(); $this->assertEquals('Completed',Task::find($t->id)->status); $this->assertNotNull(Task::find($t->id)->completed_at); $this->actingAs($u)->post("/tasks/{$t->id}/reopen"); $this->assertEquals('Pending',Task::find($t->id)->status); }
+ public function test_recurring_creates_instances(): void { $u=User::factory()->create(); $this->actingAs($u)->post('/tasks',['title'=>'Daily','category'=>'Personal','date'=>now()->toDateString(),'priority'=>'Low','recurrence_type'=>'daily']); $this->assertGreaterThan(1,Task::count()); }
+}

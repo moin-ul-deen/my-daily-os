@@ -1,0 +1,8 @@
+<?php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+return new class extends Migration {
+ public function up(): void { Schema::create('water_logs', function(Blueprint $t){ $t->id(); $t->foreignId('user_id')->constrained()->cascadeOnDelete(); $t->date('date'); $t->integer('quantity_ml'); $t->time('time')->nullable(); $t->string('note')->nullable(); $t->timestamps(); $t->index(['user_id','date']); }); Schema::create('weight_logs', function(Blueprint $t){ $t->id(); $t->foreignId('user_id')->constrained()->cascadeOnDelete(); $t->date('date'); $t->decimal('weight_kg',6,2); $t->string('note')->nullable(); $t->timestamps(); $t->index(['user_id','date']); }); Schema::create('walking_logs', function(Blueprint $t){ $t->id(); $t->foreignId('user_id')->constrained()->cascadeOnDelete(); $t->date('date'); $t->decimal('distance_km',8,3); $t->integer('duration_minutes')->nullable(); $t->integer('steps')->nullable(); $t->integer('calories')->nullable(); $t->text('notes')->nullable(); $t->timestamps(); $t->index(['user_id','date']); }); Schema::create('exercise_logs', function(Blueprint $t){ $t->id(); $t->foreignId('user_id')->constrained()->cascadeOnDelete(); $t->string('exercise_type'); $t->date('date'); $t->integer('duration_minutes')->nullable(); $t->integer('sets')->nullable(); $t->integer('repetitions')->nullable(); $t->decimal('weight_kg',6,2)->nullable(); $t->text('notes')->nullable(); $t->timestamps(); $t->index(['user_id','date']); }); }
+ public function down(): void { Schema::dropIfExists('water_logs'); }
+};

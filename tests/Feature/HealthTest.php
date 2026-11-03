@@ -1,0 +1,6 @@
+<?php namespace Tests\Feature; use App\Models\{User,WeightLog,SleepRecord}; use Carbon\Carbon; use Illuminate\Foundation\Testing\RefreshDatabase; use Tests\TestCase;
+class HealthTest extends TestCase { use RefreshDatabase;
+ public function test_weight_history_preserved(): void { $u=User::factory()->create(); WeightLog::create(['user_id'=>$u->id,'date'=>'2026-11-01','weight_kg'=>80]); WeightLog::create(['user_id'=>$u->id,'date'=>'2026-11-02','weight_kg'=>79.5]); $this->assertEquals(2,WeightLog::count()); }
+ public function test_water_log(): void { $u=User::factory()->create(); $this->actingAs($u)->post('/health/water',['date'=>now()->toDateString(),'quantity_ml'=>250])->assertRedirect(); $this->assertDatabaseHas('water_logs',['quantity_ml'=>250]); }
+ public function test_sleep_crossing_midnight_and_daytime(): void { $u=User::factory()->create(); $this->actingAs($u)->post('/sleep',['sleep_start'=>'2026-11-01 06:00','wake_time'=>'2026-11-01 14:00','quality_rating'=>4]); $s=SleepRecord::first(); $this->assertEquals(480,$s->duration_minutes); $this->actingAs($u)->post('/sleep',['sleep_start'=>'2026-11-02 23:00','wake_time'=>'2026-11-03 07:00']); $this->assertEquals(480,SleepRecord::orderByDesc('id')->first()->duration_minutes); }
+}
